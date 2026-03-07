@@ -1,0 +1,14 @@
+# ============================================================
+# SOUK TALENT - Variables d'environnement
+# Fichier : .env (à la racine du projet)
+# ⚠️  NE JAMAIS COMMITTER CE FICHIER SUR GITHUB
+# ============================================================
+
+# Supabase
+VITE_SUPABASE_URL=https://qbhrgrfwrgnqnspxcxvp.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFiaHJncmZ3cmducW5zcHhjeHZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4NDIyODIsImV4cCI6MjA4ODQxODI4Mn0.sd3dCLfTsMO05EFwVhKt1nDKgIG159zBZjYOl5g_e2s
+VITE_SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFiaHJncmZ3cmducW5zcHhjeHZwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3Mjg0MjI4MiwiZXhwIjoyMDg4NDE4MjgyfQ.swwL0bK4idxqgrIrnMwqQzkEEeOPgnLLJ9usqM8MCbU
+
+# App
+VITE_APP_NAME=Souk Talent
+VITE_APP_URL=http://localhost:5173
