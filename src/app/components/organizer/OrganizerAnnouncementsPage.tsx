@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Megaphone,
   Plus,
@@ -123,42 +123,37 @@ export function OrganizerAnnouncementsPage({ onBack }: OrganizerAnnouncementsPag
   const activeAnnouncements = announcements.filter(a => a.status === "active");
   const archivedAnnouncements = announcements.filter(a => a.status === "closed" || a.status === "expired");
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!formData.title || !formData.talentCategory || !formData.eventDate || !formData.city || !formData.budgetMin) {
       toast.error("Veuillez remplir tous les champs obligatoires");
       return;
     }
-
-    const newAnnouncement: Announcement = {
-      id: `org-ann-${Date.now()}`,
-      organizerId: "current-organizer",
-      organizerName: "Vous",
-      organizerAvatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400",
-      title: formData.title,
-      description: formData.description,
-      talentCategory: formData.talentCategory,
-      eventType: formData.eventType,
-      eventDate: formData.eventDate,
-      city: formData.city,
-      region: formData.region,
-      venue: formData.venue,
-      budgetMin: parseInt(formData.budgetMin),
-      budgetMax: formData.budgetMax ? parseInt(formData.budgetMax) : parseInt(formData.budgetMin),
-      guestCount: formData.guestCount ? parseInt(formData.guestCount) : undefined,
-      duration: formData.duration,
-      requirements: formData.requirements ? formData.requirements.split("\n").filter(r => r.trim()) : undefined,
-      createdAt: new Date().toISOString(),
-      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-      status: "active",
-      applicationsCount: 0,
-    };
-
-    setAnnouncements([newAnnouncement, ...announcements]);
-    setShowModal(false);
-    resetForm();
-    toast.success("Annonce publiée avec succès !", {
-      description: "Les artistes correspondant à votre recherche seront notifiés.",
-    });
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { toast.error("Vous devez être connecté"); return; }
+      const { error } = await supabase.from("announcements").insert({
+        organizer_id: user.id,
+        title: formData.title,
+        description: formData.description,
+        categories_needed: formData.talentCategory ? [formData.talentCategory] : [],
+        event_type: formData.eventType,
+        event_date: formData.eventDate,
+        event_city: formData.city,
+        region: formData.region,
+        budget_min: parseInt(formData.budgetMin),
+        budget_max: formData.budgetMax ? parseInt(formData.budgetMax) : parseInt(formData.budgetMin),
+        status: "active",
+      });
+      if (error) throw error;
+      await fetchMyAnnouncements();
+      setShowModal(false);
+      resetForm();
+      toast.success("Annonce publiée avec succès !", {
+        description: "Les artistes correspondant à votre recherche seront notifiés.",
+      });
+    } catch (err: any) {
+      toast.error("Erreur lors de la publication : " + err.message);
+    }
   };
 
   const resetForm = () => {
@@ -179,14 +174,16 @@ export function OrganizerAnnouncementsPage({ onBack }: OrganizerAnnouncementsPag
     });
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
+    await supabase.from("announcements").delete().eq("id", id);
     setAnnouncements(announcements.filter(a => a.id !== id));
     toast.info("Annonce supprimée");
   };
 
-  const handleArchive = (id: string) => {
+  const handleArchive = async (id: string) => {
+    await supabase.from("announcements").update({ status: "closed" }).eq("id", id);
     setAnnouncements(announcements.map(a => 
-      a.id === id ? { ...a, status: "closed" as const } : a
+      a.id === id ? { ...a, status: "closed" } : a
     ));
     toast.success("Annonce archivée");
   };
