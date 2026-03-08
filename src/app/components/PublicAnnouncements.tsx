@@ -140,7 +140,7 @@ export function PublicAnnouncements({ onBack }: PublicAnnouncementsProps) {
                           <DollarSign className="size-4 text-[#1DB954] flex-shrink-0" />
                           <div><p className="text-gray-500 text-xs">Budget</p>
                             <p className="text-white font-semibold">
-                              {a.budget_min && a.budget_max ? `${a.budget_min.toLocaleString()} - ${a.budget_max.toLocaleString()} DH` : a.budget_min ? `À partir de ${a.budget_min.toLocaleString()} DH` : `Jusqu'à ${a.budget_max?.toLocaleString()} DH`}
+                              {a.budget_min && a.budget_max ? `${(a.budget_min || 0).toLocaleString()} - ${a.budget_max.toLocaleString()} DH` : a.budget_min ? `À partir de ${(a.budget_min || 0).toLocaleString()} DH` : `Jusqu'à ${(a.budget_max || 0).toLocaleString()} DH`}
                             </p>
                           </div>
                         </div>
