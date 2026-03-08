@@ -93,6 +93,15 @@ export function OrganizerAnnouncementsPage({ onBack }: OrganizerAnnouncementsPag
     },
   ]);
 
+  const fetchMyAnnouncements = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data } = await supabase.from("announcements").select("*").eq("organizer_id", user.id).order("created_at", { ascending: false });
+      setAnnouncements(data || []);
+    } catch (err) { console.error(err); }
+  };
+
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
