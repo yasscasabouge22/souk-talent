@@ -229,7 +229,7 @@ export function OrganizerAnnouncementsPage({ onBack }: OrganizerAnnouncementsPag
                 <div>
                   <p className="text-gray-500 text-xs">Date</p>
                   <p className="text-white">
-                    {format(new Date(announcement.eventDate), "dd MMM yyyy", { locale: fr })}
+                    {(() => { try { return format(new Date(announcement.eventDate), "dd MMM yyyy", { locale: fr }); } catch { return announcement.eventDate || "Date non définie"; } })()}
                   </p>
                 </div>
               </div>

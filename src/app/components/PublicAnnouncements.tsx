@@ -126,7 +126,7 @@ export function PublicAnnouncements({ onBack }: PublicAnnouncementsProps) {
                       {a.event_date && (
                         <div className="flex items-center gap-2 text-sm p-3 bg-[#191414] rounded-lg">
                           <Calendar className="size-4 text-[#1DB954] flex-shrink-0" />
-                          <div><p className="text-gray-500 text-xs">Date</p><p className="text-white">{format(new Date(a.event_date), "dd MMM yyyy", { locale: fr })}</p></div>
+                          <div><p className="text-gray-500 text-xs">Date</p><p className="text-white">{(() => { try { return format(new Date(a.event_date), "dd MMM yyyy", { locale: fr }); } catch { return a.event_date || ""; } })()}</p></div>
                         </div>
                       )}
                       {(a.event_city || a.region) && (
